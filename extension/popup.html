@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pulso EQ</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main>
+    <header>
+      <div class="brand"><img src="icons/48.png" width="40" height="40" alt=""><h1>Pulso <span>EQ</span></h1></div>
+      <button id="power" aria-pressed="false" disabled>Ativar nesta aba</button>
+    </header>
+    <p id="status" role="status">Conectando à aba…</p>
+    <section class="card volume">
+      <div class="row"><label for="volume">Volume da aba</label><output for="volume" id="volume-value">100%</output></div>
+      <input id="volume" type="range" min="0" max="400" step="5" value="100">
+      <div class="scale"><span>0%</span><span>100% original</span><span>400%</span></div>
+    </section>
+    <section class="card">
+      <div class="row"><h2>Equalizador</h2><button id="reset" class="quiet">Restaurar</button></div>
+      <svg id="curve" viewBox="0 0 350 76" role="img" aria-label="Curva do equalizador">
+        <defs><linearGradient id="fill" x2="0" y2="1"><stop stop-color="#bcff78" stop-opacity=".27"/><stop offset="1" stop-color="#bcff78" stop-opacity="0"/></linearGradient></defs>
+        <path class="grid" d="M0 12H350 M0 38H350 M0 64H350 M25 0V76 M75 0V76 M125 0V76 M175 0V76 M225 0V76 M275 0V76 M325 0V76"/>
+        <path id="area" fill="url(#fill)"/><path id="line"/>
+      </svg>
+      <div id="bands"></div>
+    </section>
+    <section class="card">
+      <h2>Presets</h2>
+      <div id="presets" class="chips"></div>
+      <div id="saved" class="chips"></div>
+      <form id="save">
+        <input id="name" maxlength="28" placeholder="Nome do seu preset" aria-label="Nome do seu preset" required>
+        <button type="submit">Salvar</button>
+      </form>
+    </section>
+  </main>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

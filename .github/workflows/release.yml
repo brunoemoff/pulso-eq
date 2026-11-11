@@ -1,0 +1,34 @@
+name: Validar e empacotar
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          for file in extension/*.js; do node --check "$file" || exit 1; done
+          node -e 'const m = require("./extension/manifest.json"); if (process.env.GITHUB_REF_TYPE === "tag" && process.env.GITHUB_REF_NAME !== "v" + m.version) process.exit(1)'
+          (cd extension && zip -r ../pulso-eq.zip .)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pulso-eq
+          path: pulso-eq.zip
+  release:
+    if: github.ref_type == 'tag'
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: pulso-eq
+      - run: gh release create "$GITHUB_REF_NAME" pulso-eq.zip --repo "$GITHUB_REPOSITORY" --generate-notes --verify-tag
+        env:
+          GH_TOKEN: ${{ github.token }}
